@@ -268,6 +268,34 @@
       .topbar-right { display: none; }
       .stats-bar { grid-template-columns: 1fr 1fr; }
     }
+
+    /* ── Edit mode ── */
+    .action-text { flex: 1; min-width: 0; }
+    [contenteditable]:focus { outline: 1px solid rgba(137,255,0,0.35); outline-offset: 2px; border-radius: 1px; }
+    [contenteditable]:hover:not(:focus) { outline: 1px dashed rgba(137,255,0,0.12); outline-offset: 2px; }
+    .action-delete {
+      background: none; border: none; color: #444; font-size: 15px; line-height: 1;
+      cursor: pointer; padding: 0 0 0 6px; flex-shrink: 0;
+      opacity: 0; transition: opacity 0.15s, color 0.15s; align-self: flex-start; margin-top: 2px;
+    }
+    .action-item:hover .action-delete { opacity: 1; }
+    .action-delete:hover { color: #ff4444; }
+    .add-action-btn {
+      background: none; border: 1px dashed #1a2a1a; color: #2e4a2e;
+      font-family: 'Barlow Condensed', sans-serif; font-size: 10px; font-weight: 700;
+      letter-spacing: 2px; text-transform: uppercase; padding: 5px 10px;
+      cursor: pointer; margin-top: 10px; display: block; width: 100%; text-align: left;
+      transition: border-color 0.15s, color 0.15s;
+    }
+    .add-action-btn:hover { border-color: var(--green-dim); color: var(--green-dim); }
+    .add-row-btn {
+      background: none; border: 1px dashed #182818; color: #243a24;
+      font-family: 'Barlow Condensed', sans-serif; font-size: 10px; font-weight: 700;
+      letter-spacing: 2px; text-transform: uppercase; padding: 10px 24px;
+      cursor: pointer; margin-top: 2px; display: block; width: 100%; text-align: center;
+      transition: border-color 0.15s, color 0.15s;
+    }
+    .add-row-btn:hover { border-color: var(--green-dim); color: var(--green-dim); }
   </style>
 </head>
 <body>
@@ -871,6 +899,180 @@
       }
     });
   }
+
+  // ── Inline editing ──────────────────────────────────────────────
+
+  var STORAGE_KEY = 'monster_ai_edits';
+
+  function saveAll() {
+    var data = {};
+    document.querySelectorAll('.ws-card').forEach(function(card, ci) {
+      var key = 'card-' + ci;
+      data[key] = {};
+      // topic name
+      var tn = card.querySelector('.ws-topic-name');
+      if (tn) data[key].topicName = tn.innerText;
+      // owner name
+      var on = card.querySelector('.owner-name');
+      if (on) data[key].ownerName = on.innerText;
+      // action items
+      data[key].actions = [];
+      card.querySelectorAll('.action-item').forEach(function(item) {
+        var txt = item.querySelector('.action-text');
+        if (txt) data[key].actions.push(txt.innerText);
+      });
+    });
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+  }
+
+  function makeEditable(el) {
+    el.setAttribute('contenteditable', 'true');
+    el.setAttribute('spellcheck', 'false');
+    el.addEventListener('input', saveAll);
+    el.addEventListener('keydown', function(e) { if (e.key === 'Enter') { e.preventDefault(); el.blur(); } });
+  }
+
+  function makeActionItem(text) {
+    var item = document.createElement('div');
+    item.className = 'action-item';
+
+    var dot = document.createElement('div');
+    dot.className = 'action-dot';
+
+    var txt = document.createElement('span');
+    txt.className = 'action-text';
+    txt.innerText = text;
+    makeEditable(txt);
+
+    var del = document.createElement('button');
+    del.className = 'action-delete';
+    del.title = 'Remove';
+    del.innerHTML = '&times;';
+    del.addEventListener('click', function() {
+      item.remove();
+      saveAll();
+    });
+
+    item.appendChild(dot);
+    item.appendChild(txt);
+    item.appendChild(del);
+    return item;
+  }
+
+  function initCard(card, ci, saved) {
+    var key = 'card-' + ci;
+
+    // Topic name
+    var tn = card.querySelector('.ws-topic-name');
+    if (tn) {
+      makeEditable(tn);
+      if (saved && saved[key] && saved[key].topicName !== undefined) tn.innerText = saved[key].topicName;
+    }
+
+    // Owner name
+    var on = card.querySelector('.owner-name');
+    if (on) {
+      makeEditable(on);
+      if (saved && saved[key] && saved[key].ownerName !== undefined) on.innerText = saved[key].ownerName;
+    }
+
+    // Action items — replace static markup with editable versions
+    var actionsContainer = card.querySelector('.ws-actions');
+    if (actionsContainer) {
+      var existingItems = Array.from(actionsContainer.querySelectorAll('.action-item'));
+      var texts;
+      if (saved && saved[key] && saved[key].actions) {
+        texts = saved[key].actions;
+        // Remove all existing static items and rebuild from saved
+        existingItems.forEach(function(i) { i.remove(); });
+        texts.forEach(function(t) { actionsContainer.insertBefore(makeActionItem(t), actionsContainer.querySelector('.add-action-btn')); });
+      } else {
+        // Upgrade existing static items in place
+        existingItems.forEach(function(item) {
+          var dot = item.querySelector('.action-dot');
+          var existingText = item.innerText.trim();
+          item.innerHTML = '';
+          if (dot) { item.appendChild(dot); } else { var d = document.createElement('div'); d.className = 'action-dot'; item.appendChild(d); }
+          var txt = document.createElement('span');
+          txt.className = 'action-text';
+          txt.innerText = existingText;
+          makeEditable(txt);
+          item.appendChild(txt);
+          var del = document.createElement('button');
+          del.className = 'action-delete';
+          del.title = 'Remove';
+          del.innerHTML = '&times;';
+          del.addEventListener('click', function() { item.remove(); saveAll(); });
+          item.appendChild(del);
+        });
+      }
+
+      // Add "+ Add action item" button
+      var addBtn = document.createElement('button');
+      addBtn.className = 'add-action-btn';
+      addBtn.innerText = '+ Add action item';
+      addBtn.addEventListener('click', function() {
+        var newItem = makeActionItem('New action item');
+        actionsContainer.insertBefore(newItem, addBtn);
+        newItem.querySelector('.action-text').focus();
+        // select all text
+        var range = document.createRange(); range.selectNodeContents(newItem.querySelector('.action-text'));
+        var sel = window.getSelection(); sel.removeAllRanges(); sel.addRange(range);
+        saveAll();
+      });
+      actionsContainer.appendChild(addBtn);
+    }
+  }
+
+  function makeBlankCard(grid) {
+    var card = document.createElement('div');
+    card.className = 'ws-card';
+    card.innerHTML = [
+      '<div class="ws-topic"><div class="ws-topic-name">New Topic</div></div>',
+      '<div class="ws-people"></div>',
+      '<div class="ws-actions"></div>',
+      '<div class="ws-owner"><div class="owner-box"><div class="owner-label">Action Owner</div><div class="owner-name">TBD</div></div></div>'
+    ].join('');
+    grid.insertBefore(card, grid.querySelector('.add-row-btn'));
+    // Re-index all cards and init
+    var allCards = document.querySelectorAll('.ws-card');
+    allCards.forEach(function(c, i) { initCard(c, i, null); });
+    saveAll();
+    card.querySelector('.ws-topic-name').focus();
+  }
+
+  function initEditing() {
+    var saved = null;
+    try { saved = JSON.parse(localStorage.getItem(STORAGE_KEY)); } catch(e) {}
+
+    document.querySelectorAll('.ws-card').forEach(function(card, ci) {
+      initCard(card, ci, saved);
+    });
+
+    // Add "+ Add row" button to each workstream-grid
+    document.querySelectorAll('.workstream-grid').forEach(function(grid) {
+      var btn = document.createElement('button');
+      btn.className = 'add-row-btn';
+      btn.innerText = '+ Add row';
+      btn.addEventListener('click', function() { makeBlankCard(grid); });
+      grid.appendChild(btn);
+    });
+  }
+
+  // Init after gate is cleared (or immediately if already authenticated)
+  (function() {
+    if (sessionStorage.getItem('monster_ai_auth') === '1') {
+      initEditing();
+    } else {
+      var orig = window.checkPassword;
+      window.checkPassword = function() {
+        orig();
+        setTimeout(function() {
+          if (sessionStorage.getItem('monster_ai_auth') === '1') initEditing();
+        }, 450);
+      };
+    }
+  })();
 </script>
 
 </body>
