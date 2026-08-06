@@ -1,0 +1,1083 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Monster Energy × Dreamforce 2026 — Attendee Guide</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@700;900&family=Barlow:wght@400;600&display=swap');
+
+    :root {
+      --green: #89FF00;
+      --green-dim: #5cb800;
+      --green-glow: rgba(137, 255, 0, 0.18);
+      --green-glow-strong: rgba(137, 255, 0, 0.35);
+      --black: #000000;
+      --surface: #080808;
+      --card: #0c0c0c;
+      --card-border: #1c1c1c;
+      --text: #e8e8e8;
+      --muted: #666;
+      --sf-blue: #4db6ff;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      background: var(--black);
+      color: var(--text);
+      font-family: 'Barlow', -apple-system, BlinkMacSystemFont, sans-serif;
+      line-height: 1.6;
+      overflow-x: hidden;
+    }
+
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='1'/%3E%3C/svg%3E");
+      opacity: 0.035;
+      pointer-events: none;
+      z-index: 9999;
+    }
+
+    /* ── PASSWORD GATE ── */
+    #gate {
+      position: fixed;
+      inset: 0;
+      z-index: 10000;
+      background: #000;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+    #gate.hidden { display: none; }
+    .gate-bg {
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(ellipse 60% 40% at 50% 50%, rgba(137,255,0,0.07), transparent 70%);
+      pointer-events: none;
+    }
+    .gate-claw { font-size: 72px; line-height: 1; margin-bottom: 24px; filter: drop-shadow(0 0 24px rgba(137,255,0,0.5)); user-select: none; }
+    .gate-title { font-family: 'Barlow Condensed', sans-serif; font-size: 13px; font-weight: 700; letter-spacing: 5px; text-transform: uppercase; color: var(--muted); margin-bottom: 40px; }
+    .gate-box { display: flex; flex-direction: column; align-items: center; gap: 12px; width: 100%; max-width: 360px; padding: 0 24px; }
+    .gate-input { width: 100%; background: #0e0e0e; border: 1px solid #2a2a2a; border-radius: 0; color: var(--text); font-family: 'Barlow', sans-serif; font-size: 1rem; padding: 14px 18px; outline: none; letter-spacing: 3px; text-align: center; transition: border-color 0.2s; }
+    .gate-input:focus { border-color: var(--green-dim); }
+    .gate-input::placeholder { letter-spacing: 2px; color: #333; }
+    .gate-btn { width: 100%; background: var(--green); border: none; border-radius: 0; color: #000; font-family: 'Barlow Condensed', sans-serif; font-size: 1rem; font-weight: 900; letter-spacing: 4px; text-transform: uppercase; padding: 14px 18px; cursor: pointer; transition: background 0.15s, box-shadow 0.15s; }
+    .gate-btn:hover { background: #a0ff20; box-shadow: 0 0 24px rgba(137,255,0,0.3); }
+    .gate-error { font-size: 11px; letter-spacing: 2px; text-transform: uppercase; color: #ff4444; height: 16px; transition: opacity 0.2s; opacity: 0; }
+    .gate-error.visible { opacity: 1; }
+
+    /* ── SCROLLBAR ── */
+    ::-webkit-scrollbar { width: 6px; }
+    ::-webkit-scrollbar-track { background: #000; }
+    ::-webkit-scrollbar-thumb { background: #222; }
+    ::-webkit-scrollbar-thumb:hover { background: var(--green-dim); }
+
+    /* ── NAV ── */
+    .topbar {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: rgba(0,0,0,0.92);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid #111;
+      padding: 0 32px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 52px;
+    }
+    .topbar-brand { font-family: 'Barlow Condensed', sans-serif; font-size: 13px; font-weight: 700; letter-spacing: 4px; text-transform: uppercase; color: var(--green); }
+    .topbar-nav { display: flex; gap: 4px; }
+    .topbar-nav a {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--muted);
+      text-decoration: none;
+      padding: 6px 12px;
+      border: 1px solid transparent;
+      transition: color 0.15s, border-color 0.15s;
+    }
+    .topbar-nav a:hover { color: var(--green); border-color: rgba(137,255,0,0.2); }
+    .topbar-badge { font-size: 11px; font-weight: 600; letter-spacing: 2px; text-transform: uppercase; color: var(--muted); border: 1px solid #222; padding: 3px 10px; }
+
+    /* ── HERO ── */
+    .hero {
+      position: relative;
+      overflow: hidden;
+      padding: 80px 24px 72px;
+      text-align: center;
+      background: #000;
+    }
+    .hero-glow {
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(ellipse 80% 60% at 50% -10%, rgba(137,255,0,0.10), transparent 60%),
+        radial-gradient(ellipse 40% 30% at 20% 80%, rgba(137,255,0,0.03), transparent 50%),
+        radial-gradient(ellipse 40% 30% at 80% 80%, rgba(137,255,0,0.03), transparent 50%);
+      pointer-events: none;
+    }
+    .hero::after {
+      content: "";
+      position: absolute;
+      bottom: -2px;
+      left: 0; right: 0;
+      height: 60px;
+      background: var(--surface);
+      clip-path: polygon(0 100%, 100% 0, 100% 100%);
+    }
+    .hero-eyebrow { display: inline-block; font-family: 'Barlow Condensed', sans-serif; font-size: 11px; font-weight: 700; letter-spacing: 5px; text-transform: uppercase; color: var(--green); margin-bottom: 20px; padding: 4px 14px; border: 1px solid rgba(137,255,0,0.3); border-left: 3px solid var(--green); }
+    .hero-claw { display: block; font-size: 40px; margin-bottom: 8px; filter: drop-shadow(0 0 16px rgba(137,255,0,0.4)); }
+    .hero h1 { font-family: 'Barlow Condensed', sans-serif; font-size: clamp(2.6rem, 8vw, 6rem); font-weight: 900; letter-spacing: -1px; line-height: 0.95; text-transform: uppercase; margin-bottom: 16px; }
+    .hero h1 .line-green { display: block; color: var(--green); text-shadow: 0 0 40px rgba(137,255,0,0.4); }
+    .hero h1 .line-white { display: block; color: #fff; }
+    .hero-sub { font-size: 0.95rem; color: var(--muted); max-width: 480px; margin: 0 auto 40px; }
+    .hero-dates { position: relative; z-index: 1; display: inline-grid; grid-template-columns: repeat(4, auto); gap: 0; border: 1px solid #1e1e1e; overflow: hidden; }
+    .date-item { text-align: center; padding: 18px 26px; border-right: 1px solid #1e1e1e; background: #080808; }
+    .date-item:last-child { border-right: none; }
+    .date-label { font-family: 'Barlow Condensed', sans-serif; font-size: 9px; letter-spacing: 3px; text-transform: uppercase; color: var(--muted); margin-bottom: 5px; }
+    .date-value { font-family: 'Barlow Condensed', sans-serif; font-size: 1.1rem; font-weight: 700; letter-spacing: 1px; color: var(--text); text-transform: uppercase; }
+    .date-value.accent { color: var(--green); }
+
+    /* ── LAYOUT ── */
+    .container { max-width: 1100px; margin: 0 auto; padding: 64px 24px; }
+    .section-header { display: flex; align-items: center; gap: 16px; margin-bottom: 28px; padding-bottom: 16px; border-bottom: 1px solid #111; }
+    .section-header h2 { font-family: 'Barlow Condensed', sans-serif; font-size: 1.7rem; font-weight: 900; letter-spacing: 1px; text-transform: uppercase; }
+    .section-bar { width: 3px; height: 28px; background: var(--green); flex-shrink: 0; box-shadow: 0 0 8px rgba(137,255,0,0.5); }
+    .section-tag { font-family: 'Barlow Condensed', sans-serif; font-size: 10px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: var(--green); background: rgba(137,255,0,0.06); border: 1px solid rgba(137,255,0,0.2); border-left: 2px solid var(--green); padding: 3px 10px; margin-left: auto; }
+    .section-tag.blue { color: var(--sf-blue); background: rgba(77,182,255,0.06); border-color: rgba(77,182,255,0.2); border-left-color: var(--sf-blue); }
+    .section-divider { border: none; border-top: 1px solid #0d0d0d; margin: 0; }
+
+    /* ── KNOW BEFORE YOU GO ── */
+    .kbyg-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 1px;
+      background: #111;
+      border: 1px solid #111;
+    }
+    .kbyg-card {
+      background: var(--card);
+      padding: 26px 28px;
+      position: relative;
+      transition: background 0.2s;
+    }
+    .kbyg-card::before {
+      content: "";
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 2px;
+      background: transparent;
+      transition: background 0.2s;
+    }
+    .kbyg-card:hover { background: #0f0f0f; }
+    .kbyg-card:hover::before { background: var(--green); }
+    .kbyg-icon { font-size: 1.5rem; margin-bottom: 12px; display: block; }
+    .kbyg-card h3 { font-family: 'Barlow Condensed', sans-serif; font-size: 1rem; font-weight: 900; letter-spacing: 1px; text-transform: uppercase; margin-bottom: 10px; color: #fff; }
+    .kbyg-card ul { list-style: none; display: flex; flex-direction: column; gap: 7px; }
+    .kbyg-card ul li { font-size: 0.83rem; color: #999; display: flex; align-items: flex-start; gap: 9px; line-height: 1.4; }
+    .kbyg-card ul li::before { content: "—"; color: var(--green); font-weight: 700; flex-shrink: 0; margin-top: 1px; }
+    .kbyg-card a { color: var(--sf-blue); text-decoration: none; }
+    .kbyg-card a:hover { text-decoration: underline; }
+    .kbyg-note {
+      margin-top: 1px;
+      background: #060f00;
+      border: 1px solid rgba(137,255,0,0.15);
+      border-top: 2px solid var(--green);
+      padding: 18px 24px;
+      font-size: 0.84rem;
+      color: var(--muted);
+    }
+    .kbyg-note strong { color: var(--green); font-family: 'Barlow Condensed', sans-serif; letter-spacing: 1px; font-size: 0.78rem; text-transform: uppercase; }
+
+    /* ── ATTENDEES ── */
+    .people-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+      gap: 1px;
+      background: #111;
+      border: 1px solid #111;
+    }
+    .person-card {
+      background: var(--card);
+      padding: 24px;
+      transition: background 0.2s;
+      position: relative;
+    }
+    .person-card::before {
+      content: "";
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 2px;
+      background: transparent;
+      transition: background 0.2s;
+    }
+    .person-card:hover { background: #0f0f0f; }
+    .person-card.host::before { background: var(--green); }
+    .person-card.attendee::before { background: var(--sf-blue); }
+    .person-avatar {
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      background: #1a1a1a;
+      border: 1px solid #2a2a2a;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 1.1rem;
+      font-weight: 900;
+      color: var(--muted);
+      margin-bottom: 14px;
+      letter-spacing: 1px;
+      overflow: hidden;
+    }
+    .person-avatar img { width: 100%; height: 100%; object-fit: cover; border-radius: 50%; }
+    .person-role-tag {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 9px;
+      font-weight: 700;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      margin-bottom: 6px;
+    }
+    .person-role-tag.host { color: var(--green); }
+    .person-role-tag.attendee { color: var(--sf-blue); }
+    .person-card h3 { font-family: 'Barlow Condensed', sans-serif; font-size: 1.05rem; font-weight: 700; letter-spacing: 0.5px; text-transform: uppercase; margin-bottom: 2px; color: #fff; }
+    .person-title { font-size: 0.8rem; color: var(--muted); margin-bottom: 14px; line-height: 1.3; }
+    .person-contact { display: flex; flex-direction: column; gap: 5px; }
+    .person-contact a {
+      font-size: 0.78rem;
+      color: #888;
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      transition: color 0.15s;
+    }
+    .person-contact a:hover { color: var(--green); }
+    .contact-icon { font-size: 0.7rem; opacity: 0.6; width: 12px; flex-shrink: 0; }
+    .add-person-card {
+      background: #050505;
+      padding: 24px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      color: var(--muted);
+      font-size: 0.82rem;
+      cursor: pointer;
+      border: 2px dashed #1a1a1a;
+      transition: border-color 0.2s, color 0.2s;
+      min-height: 160px;
+    }
+    .add-person-card:hover { border-color: rgba(137,255,0,0.3); color: var(--green); }
+    .add-person-card .plus { font-family: 'Barlow Condensed', sans-serif; font-size: 2.2rem; font-weight: 900; display: block; margin-bottom: 6px; opacity: 0.4; }
+
+    /* ── SOCIAL EVENTS ── */
+    .calendar-strip {
+      display: flex;
+      flex-direction: column;
+      gap: 1px;
+      background: #111;
+      border: 1px solid #111;
+    }
+    .cal-day-header {
+      background: #060606;
+      padding: 10px 24px;
+      border-bottom: 1px solid #111;
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 4px;
+      text-transform: uppercase;
+      color: var(--muted);
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .cal-day-header .day-label { color: var(--text); }
+    .cal-event-row {
+      background: var(--card);
+      padding: 18px 24px;
+      display: grid;
+      grid-template-columns: 90px 1fr auto;
+      gap: 20px;
+      align-items: start;
+      transition: background 0.15s;
+      border-bottom: 1px solid #0d0d0d;
+    }
+    .cal-event-row:last-of-type { border-bottom: none; }
+    .cal-event-row:hover { background: #0f0f0f; }
+    .cal-time {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 0.95rem;
+      font-weight: 700;
+      color: var(--green);
+      letter-spacing: 1px;
+      padding-top: 2px;
+    }
+    .cal-time.tbd { color: var(--muted); }
+    .cal-event-name { font-size: 0.9rem; font-weight: 600; color: var(--text); margin-bottom: 4px; }
+    .cal-event-meta { font-size: 0.78rem; color: var(--muted); display: flex; gap: 14px; flex-wrap: wrap; }
+    .cal-event-meta span { display: flex; align-items: center; gap: 4px; }
+    .cal-badge {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 9px;
+      font-weight: 700;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      padding: 3px 9px;
+      border: 1px solid;
+      white-space: nowrap;
+      align-self: flex-start;
+    }
+    .cal-badge.monster { color: var(--green); border-color: rgba(137,255,0,0.3); background: rgba(137,255,0,0.05); }
+    .cal-badge.salesforce { color: var(--sf-blue); border-color: rgba(77,182,255,0.3); background: rgba(77,182,255,0.05); }
+    .cal-badge.open { color: #888; border-color: #222; background: transparent; }
+    .cal-badge.tbd { color: #555; border-color: #1a1a1a; background: transparent; }
+    .add-event-row {
+      background: #050505;
+      padding: 18px 24px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      color: var(--muted);
+      font-size: 0.82rem;
+      cursor: pointer;
+      border: 2px dashed #1a1a1a;
+      transition: border-color 0.2s, color 0.2s;
+      margin: 1px;
+    }
+    .add-event-row:hover { border-color: rgba(137,255,0,0.3); color: var(--green); }
+
+    /* ── TOPICS OF INTEREST ── */
+    .topics-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+      gap: 1px;
+      background: #111;
+      border: 1px solid #111;
+    }
+    .topic-card {
+      background: var(--card);
+      padding: 22px 24px;
+      position: relative;
+      transition: background 0.2s;
+    }
+    .topic-card::before {
+      content: "";
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 2px;
+      background: var(--sf-blue);
+    }
+    .topic-card:hover { background: #0f0f0f; }
+    .topic-category {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 9px;
+      font-weight: 700;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      color: var(--sf-blue);
+      margin-bottom: 8px;
+    }
+    .topic-card h3 { font-family: 'Barlow Condensed', sans-serif; font-size: 1rem; font-weight: 900; letter-spacing: 0.5px; text-transform: uppercase; margin-bottom: 8px; color: #fff; }
+    .topic-card p { font-size: 0.81rem; color: var(--muted); line-height: 1.5; margin-bottom: 12px; }
+    .topic-tags { display: flex; flex-wrap: wrap; gap: 6px; }
+    .topic-tag {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 9px;
+      font-weight: 700;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      color: var(--muted);
+      background: #111;
+      border: 1px solid #1e1e1e;
+      padding: 2px 8px;
+    }
+
+    /* ── SESSIONS ── */
+    .sessions-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      gap: 1px;
+      background: #111;
+      border: 1px solid #111;
+    }
+    .session-card {
+      background: var(--card);
+      padding: 24px;
+      transition: background 0.2s;
+      position: relative;
+    }
+    .session-card::before {
+      content: "";
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 2px;
+      background: #1a1a1a;
+      transition: background 0.2s;
+    }
+    .session-card:hover { background: #0f0f0f; }
+    .session-card:hover::before { background: var(--sf-blue); }
+    .session-card.empty {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      min-height: 160px;
+      background: #050505;
+      border: 2px dashed #1a1a1a;
+      cursor: pointer;
+      color: var(--muted);
+      font-size: 0.82rem;
+      transition: border-color 0.2s, color 0.2s;
+    }
+    .session-card.empty:hover { border-color: rgba(77,182,255,0.3); color: var(--sf-blue); }
+    .session-card.empty::before { display: none; }
+    .session-card.empty .plus { font-family: 'Barlow Condensed', sans-serif; font-size: 2.2rem; font-weight: 900; display: block; margin-bottom: 6px; opacity: 0.4; }
+    .session-track { font-family: 'Barlow Condensed', sans-serif; font-size: 9px; font-weight: 700; letter-spacing: 3px; text-transform: uppercase; color: var(--sf-blue); margin-bottom: 8px; }
+    .session-card h4 { font-family: 'Barlow Condensed', sans-serif; font-size: 1.05rem; font-weight: 700; letter-spacing: 0.5px; text-transform: uppercase; margin-bottom: 8px; line-height: 1.2; }
+    .session-card p { font-size: 0.82rem; color: var(--muted); margin-bottom: 14px; line-height: 1.5; }
+    .session-meta { display: flex; gap: 8px; flex-wrap: wrap; }
+    .session-chip { font-family: 'Barlow Condensed', sans-serif; font-size: 10px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; color: var(--muted); background: #111; border: 1px solid #1e1e1e; padding: 2px 8px; }
+
+    /* ── FOOTER ── */
+    .page-footer {
+      background: #050505;
+      border-top: 1px solid #111;
+      padding: 32px 24px;
+      text-align: center;
+      color: var(--muted);
+      font-size: 0.8rem;
+      letter-spacing: 0.03em;
+    }
+    .page-footer a { color: var(--green); text-decoration: none; opacity: 0.8; }
+    .page-footer a:hover { opacity: 1; }
+    .footer-claw { display: block; font-size: 28px; margin-bottom: 12px; opacity: 0.3; }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 640px) {
+      .hero-dates { grid-template-columns: 1fr 1fr; }
+      .topbar-nav { display: none; }
+      .topbar-badge { display: none; }
+      .cal-event-row { grid-template-columns: 70px 1fr; }
+      .cal-badge { display: none; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- PASSWORD GATE -->
+<div id="gate">
+  <div class="gate-bg"></div>
+  <div class="gate-claw">𝙈</div>
+  <div class="gate-title">Confidential · Salesforce Internal</div>
+  <div class="gate-box">
+    <input id="gate-input" class="gate-input" type="password" placeholder="ENTER PASSWORD" autocomplete="off" />
+    <button class="gate-btn" onclick="checkPassword()">UNLOCK</button>
+    <div class="gate-error" id="gate-error">Incorrect password</div>
+  </div>
+</div>
+<script>
+  (function() {
+    if (sessionStorage.getItem('monster_df_auth') === '1') {
+      document.getElementById('gate').classList.add('hidden');
+    }
+    document.getElementById('gate-input').addEventListener('keydown', function(e) {
+      if (e.key === 'Enter') checkPassword();
+    });
+  })();
+  function checkPassword() {
+    var val = document.getElementById('gate-input').value;
+    var err = document.getElementById('gate-error');
+    if (val.toLowerCase() === 'salesforce') {
+      sessionStorage.setItem('monster_df_auth', '1');
+      var gate = document.getElementById('gate');
+      gate.style.transition = 'opacity 0.4s';
+      gate.style.opacity = '0';
+      setTimeout(function() { gate.classList.add('hidden'); }, 400);
+    } else {
+      err.classList.add('visible');
+      document.getElementById('gate-input').value = '';
+      document.getElementById('gate-input').focus();
+      setTimeout(function() { err.classList.remove('visible'); }, 2000);
+    }
+  }
+</script>
+
+<!-- TOP BAR -->
+<nav class="topbar">
+  <span class="topbar-brand">𝙈 Monster Energy × Dreamforce 2026</span>
+  <div class="topbar-nav">
+    <a href="#kbyg">Know Before You Go</a>
+    <a href="#people">Attendees</a>
+    <a href="#events">Social Events</a>
+    <a href="#topics">Topics</a>
+    <a href="#sessions">Sessions</a>
+  </div>
+  <span class="topbar-badge">Internal · Confidential</span>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-glow"></div>
+  <span class="hero-claw">𝙈</span>
+  <span class="hero-eyebrow">Attendee Guide</span>
+  <h1>
+    <span class="line-white">Monster Energy</span>
+    <span class="line-green">× Dreamforce 2026</span>
+  </h1>
+  <p class="hero-sub">Everything your team needs to make the most of Dreamforce — logistics, contacts, events, and sessions in one place.</p>
+  <div class="hero-dates">
+    <div class="date-item">
+      <div class="date-label">Dates</div>
+      <div class="date-value">Sep 15 – 18</div>
+    </div>
+    <div class="date-item">
+      <div class="date-label">Location</div>
+      <div class="date-value">San Francisco</div>
+    </div>
+    <div class="date-item">
+      <div class="date-label">Venue</div>
+      <div class="date-value">Moscone Center</div>
+    </div>
+    <div class="date-item">
+      <div class="date-label">ACV at Stake</div>
+      <div class="date-value accent">$1.31M+</div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════
+     KNOW BEFORE YOU GO
+══════════════════════════════════════ -->
+<div id="kbyg" style="background: var(--surface);">
+<div class="container">
+  <div class="section-header">
+    <div class="section-bar"></div>
+    <h2>Know Before You Go</h2>
+    <span class="section-tag">Conference Essentials</span>
+  </div>
+
+  <div class="kbyg-grid">
+
+    <div class="kbyg-card">
+      <span class="kbyg-icon">🪪</span>
+      <h3>Badge & Registration</h3>
+      <ul>
+        <li>Pick up your badge at Moscone South Registration (open Sep 14, 3–7 PM for early pickup)</li>
+        <li>Bring a government-issued photo ID matching your registration name</li>
+        <li>Badge is required for all sessions, expo access, and evening events</li>
+        <li>Lost badge? Visit any Registration desk — bring ID</li>
+        <!-- ADD: Any specific badge tier or pre-registration notes for Monster attendees -->
+      </ul>
+    </div>
+
+    <div class="kbyg-card">
+      <span class="kbyg-icon">📍</span>
+      <h3>Getting There</h3>
+      <ul>
+        <li><strong style="color:var(--text)">Fly into SFO or OAK</strong> — both ~30 min to downtown</li>
+        <li>BART: Powell St. or Montgomery St. stations, 5-min walk to Moscone</li>
+        <li>Ride-share drop-off: Howard St. entrance (avoid peak keynote congestion)</li>
+        <li>Parking: not recommended — limited and expensive (~$60/day)</li>
+        <li><a href="https://www.salesforce.com/dreamforce/travel/" target="_blank">Official travel page ↗</a></li>
+        <!-- ADD: Hotel block info or team hotel if booked -->
+      </ul>
+    </div>
+
+    <div class="kbyg-card">
+      <span class="kbyg-icon">📱</span>
+      <h3>Must-Have Apps</h3>
+      <ul>
+        <li><strong style="color:var(--text)">Dreamforce App</strong> — session builder, maps, schedule (available iOS + Android)</li>
+        <li><strong style="color:var(--text)">Slack</strong> — team channel for real-time coordination</li>
+        <li><strong style="color:var(--text)">Salesforce Maps</strong> — navigate the Moscone campus</li>
+        <li>Add sessions to your calendar via the app before they fill up</li>
+        <!-- ADD: Any internal team Slack channel name -->
+      </ul>
+    </div>
+
+    <div class="kbyg-card">
+      <span class="kbyg-icon">👔</span>
+      <h3>What to Wear</h3>
+      <ul>
+        <li>Business casual is standard — branded Monster gear is great for identity</li>
+        <li>Comfortable shoes are essential — expect 10,000+ steps/day across campus</li>
+        <li>Layers: Moscone sessions run cold; outdoor plazas can be warm in September</li>
+        <li>Evening events often have dress codes — check each invite</li>
+        <!-- ADD: Any branded swag or materials being distributed -->
+      </ul>
+    </div>
+
+    <div class="kbyg-card">
+      <span class="kbyg-icon">🗺️</span>
+      <h3>Venue Layout</h3>
+      <ul>
+        <li><strong style="color:var(--text)">Moscone South</strong> — keynotes, registration, main expo hall</li>
+        <li><strong style="color:var(--text)">Moscone North</strong> — breakout sessions, Agentforce zone</li>
+        <li><strong style="color:var(--text)">Moscone West</strong> — partner pavilion, hands-on labs</li>
+        <li><strong style="color:var(--text)">SIC Location</strong> — confirm with your Salesforce host (typically offsite or dedicated floor)</li>
+        <!-- ADD: SIC building/floor once confirmed -->
+      </ul>
+    </div>
+
+    <div class="kbyg-card">
+      <span class="kbyg-icon">💡</span>
+      <h3>Pro Tips</h3>
+      <ul>
+        <li>Book popular sessions in the app now — they sell out weeks before the event</li>
+        <li>Keynotes fill fast — arrive 30+ min early for good seating</li>
+        <li>The expo hall is best early morning (9–11 AM) before crowds</li>
+        <li>Bring business cards or use the app's digital badge scanner</li>
+        <li>Charge your phone the night before — outlets are scarce on the floor</li>
+        <!-- ADD: Any account-specific meetings or room bookings -->
+      </ul>
+    </div>
+
+  </div>
+
+  <div class="kbyg-note">
+    <strong>Edit this section:</strong> Update each card above with confirmed details as they're published on the <a href="https://www.salesforce.com/dreamforce/" target="_blank" style="color:var(--sf-blue)">Dreamforce website ↗</a>. Replace placeholder bullets with final logistics, hotel info, and team-specific notes. Comments in the HTML mark where to add content.
+  </div>
+
+</div>
+</div>
+
+<hr class="section-divider" />
+
+<!-- ══════════════════════════════════════
+     ATTENDEES & SALESFORCE HOSTS
+══════════════════════════════════════ -->
+<div id="people" style="background: #000;">
+<div class="container">
+  <div class="section-header">
+    <div class="section-bar"></div>
+    <h2>Attendees &amp; Salesforce Hosts</h2>
+    <span class="section-tag blue">Your Team</span>
+  </div>
+
+  <!-- Monster Attendees -->
+  <div style="margin-bottom: 12px;">
+    <div style="font-family:'Barlow Condensed',sans-serif;font-size:10px;font-weight:700;letter-spacing:4px;text-transform:uppercase;color:var(--green);margin-bottom:8px;">Monster Energy Attendees</div>
+  </div>
+  <div class="people-grid" style="margin-bottom:2px;">
+
+    <!-- EDIT: Replace with actual Monster attendees -->
+    <div class="person-card attendee">
+      <div class="person-avatar">?</div>
+      <div class="person-role-tag attendee">Monster Energy · Attendee</div>
+      <h3>Attendee Name</h3>
+      <div class="person-title">Title · Monster Energy</div>
+      <div class="person-contact">
+        <a href="mailto:name@monsterenergy.com"><span class="contact-icon">✉</span> name@monsterenergy.com</a>
+        <a href="tel:+10000000000"><span class="contact-icon">☎</span> +1 (000) 000-0000</a>
+      </div>
+    </div>
+
+    <div class="person-card attendee">
+      <div class="person-avatar">?</div>
+      <div class="person-role-tag attendee">Monster Energy · Attendee</div>
+      <h3>Attendee Name</h3>
+      <div class="person-title">Title · Monster Energy</div>
+      <div class="person-contact">
+        <a href="mailto:name@monsterenergy.com"><span class="contact-icon">✉</span> name@monsterenergy.com</a>
+        <a href="tel:+10000000000"><span class="contact-icon">☎</span> +1 (000) 000-0000</a>
+      </div>
+    </div>
+
+    <div class="person-card attendee">
+      <div class="person-avatar">?</div>
+      <div class="person-role-tag attendee">Monster Energy · Attendee</div>
+      <h3>Attendee Name</h3>
+      <div class="person-title">Title · Monster Energy</div>
+      <div class="person-contact">
+        <a href="mailto:name@monsterenergy.com"><span class="contact-icon">✉</span> name@monsterenergy.com</a>
+        <a href="tel:+10000000000"><span class="contact-icon">☎</span> +1 (000) 000-0000</a>
+      </div>
+    </div>
+
+    <div class="add-person-card">
+      <span class="plus">+</span>
+      Add Monster Attendee
+      <small style="font-size:0.72rem;margin-top:4px;display:block;">Duplicate a card above and fill in details</small>
+    </div>
+
+  </div>
+
+  <!-- Salesforce Hosts -->
+  <div style="margin-top:32px;margin-bottom:12px;">
+    <div style="font-family:'Barlow Condensed',sans-serif;font-size:10px;font-weight:700;letter-spacing:4px;text-transform:uppercase;color:var(--green);margin-bottom:8px;">Salesforce Hosts</div>
+  </div>
+  <div class="people-grid">
+
+    <div class="person-card host">
+      <div class="person-avatar">AM</div>
+      <div class="person-role-tag host">Salesforce · Account Owner</div>
+      <h3>Alex McArthur</h3>
+      <div class="person-title">Account Executive · Consumer Goods</div>
+      <div class="person-contact">
+        <a href="mailto:amcarthur@salesforce.com"><span class="contact-icon">✉</span> amcarthur@salesforce.com</a>
+        <!-- ADD: Phone number -->
+        <a href="https://salesforce.enterprise.slack.com/team/amcarthur" target="_blank"><span class="contact-icon">💬</span> Slack: @amcarthur</a>
+      </div>
+    </div>
+
+    <div class="person-card host">
+      <div class="person-avatar">NH</div>
+      <div class="person-role-tag host">Salesforce · SIC Events</div>
+      <h3>Nick Haglan</h3>
+      <div class="person-title">AMER SIC Events · Salesforce</div>
+      <div class="person-contact">
+        <!-- ADD: Nick's contact details -->
+        <a href="mailto:nhaglan@salesforce.com"><span class="contact-icon">✉</span> nhaglan@salesforce.com</a>
+      </div>
+    </div>
+
+    <div class="person-card host">
+      <div class="person-avatar">AF</div>
+      <div class="person-role-tag host">Salesforce · SIC Events</div>
+      <h3>Azeo Fables</h3>
+      <div class="person-title">AMER SIC Events · Salesforce</div>
+      <div class="person-contact">
+        <!-- ADD: Azeo's contact details -->
+        <a href="mailto:afables@salesforce.com"><span class="contact-icon">✉</span> afables@salesforce.com</a>
+      </div>
+    </div>
+
+    <!-- EDIT: Add SE, CSM, or other Salesforce team members -->
+    <div class="add-person-card">
+      <span class="plus">+</span>
+      Add Salesforce Host
+      <small style="font-size:0.72rem;margin-top:4px;display:block;">SE, CSM, specialist, exec sponsor</small>
+    </div>
+
+  </div>
+
+</div>
+</div>
+
+<hr class="section-divider" />
+
+<!-- ══════════════════════════════════════
+     SOCIAL EVENTS CALENDAR
+══════════════════════════════════════ -->
+<div id="events" style="background: var(--surface);">
+<div class="container">
+  <div class="section-header">
+    <div class="section-bar"></div>
+    <h2>Social Events Calendar</h2>
+    <span class="section-tag">Sep 15 – 18</span>
+  </div>
+
+  <div class="calendar-strip">
+
+    <!-- MONDAY, SEP 15 -->
+    <div class="cal-day-header">
+      <span>Mon</span>
+      <span class="day-label">September 15</span>
+      <span style="color:#2a2a2a;margin-left:auto;">Day 1</span>
+    </div>
+
+    <div class="cal-event-row">
+      <div class="cal-time">7:00 PM</div>
+      <div>
+        <div class="cal-event-name">Dreamforce Opening Reception</div>
+        <div class="cal-event-meta">
+          <span>📍 Moscone Center, West Lobby</span>
+          <span>🎫 Badge required</span>
+        </div>
+      </div>
+      <span class="cal-badge open">Open to All</span>
+    </div>
+
+    <!-- EDIT: Add Monday evening events, dinners, hosted receptions -->
+    <div class="cal-event-row" style="opacity:0.4;">
+      <div class="cal-time tbd">TBD</div>
+      <div>
+        <div class="cal-event-name">Team Dinner — Location TBD</div>
+        <div class="cal-event-meta">
+          <span>📍 To be confirmed</span>
+          <!-- ADD: Restaurant, reservation details -->
+        </div>
+      </div>
+      <span class="cal-badge tbd">Confirm</span>
+    </div>
+
+    <!-- TUESDAY, SEP 16 -->
+    <div class="cal-day-header">
+      <span>Tue</span>
+      <span class="day-label">September 16</span>
+      <span style="color:#2a2a2a;margin-left:auto;">Day 2</span>
+    </div>
+
+    <div class="cal-event-row">
+      <div class="cal-time">9:00 AM</div>
+      <div>
+        <div class="cal-event-name">Marc Benioff Keynote</div>
+        <div class="cal-event-meta">
+          <span>📍 Moscone South, Main Hall</span>
+          <span>⏱ ~2 hours</span>
+        </div>
+      </div>
+      <span class="cal-badge salesforce">All-Hands</span>
+    </div>
+
+    <!-- EDIT: SIC meeting time once confirmed for Sep 16 -->
+    <div class="cal-event-row" style="background:#060f00;">
+      <div class="cal-time tbd">TBD</div>
+      <div>
+        <div class="cal-event-name">Monster Energy SIC Briefing ★</div>
+        <div class="cal-event-meta">
+          <span>📍 Strategic Innovation Center — location TBD</span>
+          <span>Contact: Nick Haglan</span>
+        </div>
+      </div>
+      <span class="cal-badge monster">Priority</span>
+    </div>
+
+    <div class="cal-event-row" style="opacity:0.4;">
+      <div class="cal-time tbd">TBD</div>
+      <div>
+        <div class="cal-event-name">Accenture Partner Lunch / Session</div>
+        <div class="cal-event-meta">
+          <span>📍 To be confirmed</span>
+          <!-- ADD: Location and agenda once booked -->
+        </div>
+      </div>
+      <span class="cal-badge tbd">Confirm</span>
+    </div>
+
+    <!-- WEDNESDAY, SEP 17 -->
+    <div class="cal-day-header">
+      <span>Wed</span>
+      <span class="day-label">September 17</span>
+      <span style="color:#2a2a2a;margin-left:auto;">Day 3</span>
+    </div>
+
+    <!-- EDIT: Add Wednesday events — Dreamforce concert is typically Wednesday night -->
+    <div class="cal-event-row" style="opacity:0.4;">
+      <div class="cal-time tbd">TBD</div>
+      <div>
+        <div class="cal-event-name">Dreamforce Concert — Artist TBA</div>
+        <div class="cal-event-meta">
+          <span>📍 Chase Center (typically)</span>
+          <!-- ADD: Artist/venue once announced -->
+        </div>
+      </div>
+      <span class="cal-badge open">Open Event</span>
+    </div>
+
+    <!-- THURSDAY, SEP 18 -->
+    <div class="cal-day-header">
+      <span>Thu</span>
+      <span class="day-label">September 18</span>
+      <span style="color:#2a2a2a;margin-left:auto;">Day 4</span>
+    </div>
+
+    <div class="cal-event-row" style="opacity:0.4;">
+      <div class="cal-time tbd">TBD</div>
+      <div>
+        <div class="cal-event-name">Closing Ceremony / Networking</div>
+        <div class="cal-event-meta">
+          <span>📍 Moscone Center</span>
+          <!-- ADD: Specific event details -->
+        </div>
+      </div>
+      <span class="cal-badge tbd">Confirm</span>
+    </div>
+
+  </div>
+
+  <!-- Add event prompt -->
+  <div class="add-event-row">
+    <span style="font-size:1.4rem;opacity:0.4;">+</span>
+    <span>Add a social event — duplicate any <code style="font-size:0.75rem;color:#444;background:#0a0a0a;padding:1px 5px;">&lt;div class="cal-event-row"&gt;</code> block above and update the time, name, location, and badge type</span>
+  </div>
+
+</div>
+</div>
+
+<hr class="section-divider" />
+
+<!-- ══════════════════════════════════════
+     TOPICS OF INTEREST
+══════════════════════════════════════ -->
+<div id="topics" style="background: #000;">
+<div class="container">
+  <div class="section-header">
+    <div class="section-bar"></div>
+    <h2>Topics of Interest</h2>
+    <span class="section-tag blue">Account Relevance</span>
+  </div>
+
+  <div class="topics-grid">
+
+    <div class="topic-card">
+      <div class="topic-category">AI Platform</div>
+      <h3>Agentforce</h3>
+      <p>Monster's primary growth vector. Currently &lt;5% utilization — Dreamforce is the moment to demonstrate ROI and close the $700K AF for CG Add-On.</p>
+      <div class="topic-tags">
+        <span class="topic-tag">Consumer Goods</span>
+        <span class="topic-tag">AI Agents</span>
+        <span class="topic-tag">Q4 Close</span>
+      </div>
+    </div>
+
+    <div class="topic-card">
+      <div class="topic-category">Data Platform</div>
+      <h3>Data Cloud</h3>
+      <p>Two open opportunities ($250K B2B/TPM + $210K Loyalty) hinge on Monster understanding the unified data story across their B2B and B2C segments.</p>
+      <div class="topic-tags">
+        <span class="topic-tag">B2B + B2C</span>
+        <span class="topic-tag">Loyalty</span>
+        <span class="topic-tag">Unification</span>
+      </div>
+    </div>
+
+    <div class="topic-card">
+      <div class="topic-category">Core CRM</div>
+      <h3>Consumer Goods Cloud</h3>
+      <p>Monster's existing foundation. Sessions focused on CGC roadmap, retail execution, and AI-enhanced field sales are directly relevant to Phase 3.</p>
+      <div class="topic-tags">
+        <span class="topic-tag">Retail Execution</span>
+        <span class="topic-tag">Field Sales</span>
+        <span class="topic-tag">Phase 3</span>
+      </div>
+    </div>
+
+    <div class="topic-card">
+      <div class="topic-category">Integration</div>
+      <h3>MuleSoft</h3>
+      <p>Existing $450K AOV. Reinforcing Monster as a full-platform customer and exploring expansion into additional integration use cases.</p>
+      <div class="topic-tags">
+        <span class="topic-tag">Integration</span>
+        <span class="topic-tag">Platform</span>
+        <span class="topic-tag">Expansion</span>
+      </div>
+    </div>
+
+    <div class="topic-card">
+      <div class="topic-category">AI Strategy</div>
+      <h3>ROI &amp; Adoption</h3>
+      <p>Monster's CEO is scrutinizing Agentforce ROI. Sessions covering real-world AI adoption metrics and customer success stories are key talking points.</p>
+      <div class="topic-tags">
+        <span class="topic-tag">Executive Buy-In</span>
+        <span class="topic-tag">ROI Benchmarks</span>
+        <span class="topic-tag">CG Case Studies</span>
+      </div>
+    </div>
+
+    <div class="topic-card">
+      <div class="topic-category">Partner</div>
+      <h3>Accenture Co-Sell</h3>
+      <p>Align Dreamforce touchpoints with the Phase 3 SOW conversation and Catalyst Funding narrative. Joint sessions with Accenture strengthen the close motion.</p>
+      <div class="topic-tags">
+        <span class="topic-tag">Phase 3 SOW</span>
+        <span class="topic-tag">Catalyst Funding</span>
+        <span class="topic-tag">Partner Alignment</span>
+      </div>
+    </div>
+
+    <!-- EDIT: Add or replace topics relevant to your account strategy -->
+
+  </div>
+
+</div>
+</div>
+
+<hr class="section-divider" />
+
+<!-- ══════════════════════════════════════
+     RELEVANT SESSIONS
+══════════════════════════════════════ -->
+<div id="sessions" style="background: var(--surface);">
+<div class="container">
+  <div class="section-header">
+    <div class="section-bar"></div>
+    <h2>Relevant Sessions</h2>
+    <span class="section-tag">Populate from Dreamforce App</span>
+  </div>
+
+  <div class="sessions-grid">
+
+    <!-- EDIT: Replace these placeholder cards with real sessions from the Dreamforce app.
+         For each session, add: track, session title, why it's relevant, and chips for time/location/audience. -->
+
+    <div class="session-card empty">
+      <span class="plus">+</span>
+      Add Session
+      <small style="font-size:0.72rem;margin-top:4px;display:block;color:#333;">Copy a session card template below</small>
+    </div>
+
+    <div class="session-card empty">
+      <span class="plus">+</span>
+      Add Session
+      <small style="font-size:0.72rem;margin-top:4px;display:block;color:#333;">Copy a session card template below</small>
+    </div>
+
+    <div class="session-card empty">
+      <span class="plus">+</span>
+      Add Session
+      <small style="font-size:0.72rem;margin-top:4px;display:block;color:#333;">Copy a session card template below</small>
+    </div>
+
+    <div class="session-card empty">
+      <span class="plus">+</span>
+      Add Session
+      <small style="font-size:0.72rem;margin-top:4px;display:block;color:#333;">Copy a session card template below</small>
+    </div>
+
+    <div class="session-card empty">
+      <span class="plus">+</span>
+      Add Session
+    </div>
+
+    <div class="session-card empty">
+      <span class="plus">+</span>
+      Add Session
+    </div>
+
+  </div>
+
+  <!-- Session card template (hidden, copy and paste to add real sessions) -->
+  <!--
+  COPY THIS BLOCK FOR EACH SESSION:
+
+  <div class="session-card">
+    <div class="session-track">TRACK NAME</div>
+    <h4>Session Title Goes Here</h4>
+    <p>Why this session matters to Monster Energy — connect it to open opps, exec concerns, or account strategy.</p>
+    <div class="session-meta">
+      <span class="session-chip">Tue Sep 16</span>
+      <span class="session-chip">2:00 PM</span>
+      <span class="session-chip">Moscone North 120</span>
+    </div>
+  </div>
+  -->
+
+</div>
+</div>
+
+<!-- FOOTER -->
+<footer class="page-footer">
+  <span class="footer-claw">𝙈</span>
+  Monster Energy × Dreamforce 2026 · Account Owner: Alex McArthur · Salesforce Internal<br>
+  <a href="https://org62.lightning.force.com/lightning/r/Account/0013y00001c74g9AAA/view" target="_blank">View Monster Energy Account in Salesforce ↗</a>
+  &nbsp;·&nbsp;
+  <a href="monster-dreamforce.html">Account Strategy Brief ↗</a>
+</footer>
+
+</body>
+</html>
