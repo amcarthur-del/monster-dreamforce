@@ -1,0 +1,1065 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Monster Energy × Dreamforce 2026</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@700;900&family=Barlow:wght@400;600&display=swap');
+
+    :root {
+      --green: #89FF00;
+      --green-dim: #5cb800;
+      --green-glow: rgba(137, 255, 0, 0.18);
+      --green-glow-strong: rgba(137, 255, 0, 0.35);
+      --black: #000000;
+      --surface: #080808;
+      --card: #0c0c0c;
+      --card-border: #1c1c1c;
+      --card-border-hover: #2e2e2e;
+      --text: #e8e8e8;
+      --muted: #666;
+      --sf-blue: #4db6ff;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      background: var(--black);
+      color: var(--text);
+      font-family: 'Barlow', -apple-system, BlinkMacSystemFont, sans-serif;
+      line-height: 1.6;
+      overflow-x: hidden;
+    }
+
+    /* ── Noise texture overlay ── */
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='1'/%3E%3C/svg%3E");
+      opacity: 0.035;
+      pointer-events: none;
+      z-index: 9999;
+    }
+
+    /* ════════════════════════════════
+       PASSWORD GATE
+    ════════════════════════════════ */
+    #gate {
+      position: fixed;
+      inset: 0;
+      z-index: 10000;
+      background: #000;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 0;
+    }
+
+    #gate.hidden { display: none; }
+
+    .gate-bg {
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(ellipse 60% 40% at 50% 50%, rgba(137,255,0,0.07), transparent 70%);
+      pointer-events: none;
+    }
+
+    .gate-claw {
+      font-size: 72px;
+      line-height: 1;
+      margin-bottom: 24px;
+      filter: drop-shadow(0 0 24px rgba(137,255,0,0.5));
+      user-select: none;
+    }
+
+    .gate-title {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 13px;
+      font-weight: 700;
+      letter-spacing: 5px;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 40px;
+    }
+
+    .gate-box {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 12px;
+      width: 100%;
+      max-width: 360px;
+      padding: 0 24px;
+    }
+
+    .gate-input {
+      width: 100%;
+      background: #0e0e0e;
+      border: 1px solid #2a2a2a;
+      border-radius: 0;
+      color: var(--text);
+      font-family: 'Barlow', sans-serif;
+      font-size: 1rem;
+      padding: 14px 18px;
+      outline: none;
+      letter-spacing: 3px;
+      text-align: center;
+      transition: border-color 0.2s;
+    }
+
+    .gate-input:focus { border-color: var(--green-dim); }
+    .gate-input::placeholder { letter-spacing: 2px; color: #333; }
+
+    .gate-btn {
+      width: 100%;
+      background: var(--green);
+      border: none;
+      border-radius: 0;
+      color: #000;
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 1rem;
+      font-weight: 900;
+      letter-spacing: 4px;
+      text-transform: uppercase;
+      padding: 14px 18px;
+      cursor: pointer;
+      transition: background 0.15s, box-shadow 0.15s;
+    }
+
+    .gate-btn:hover {
+      background: #a0ff20;
+      box-shadow: 0 0 24px rgba(137,255,0,0.3);
+    }
+
+    .gate-error {
+      font-size: 11px;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: #ff4444;
+      height: 16px;
+      transition: opacity 0.2s;
+    }
+
+    .gate-error.visible { opacity: 1; }
+    .gate-error:not(.visible) { opacity: 0; }
+
+    /* ════════════════════════════════
+       GLOBAL PAGE STYLES
+    ════════════════════════════════ */
+
+    /* ── Scrollbar ── */
+    ::-webkit-scrollbar { width: 6px; }
+    ::-webkit-scrollbar-track { background: #000; }
+    ::-webkit-scrollbar-thumb { background: #222; }
+    ::-webkit-scrollbar-thumb:hover { background: var(--green-dim); }
+
+    /* ── Nav bar ── */
+    .topbar {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: rgba(0,0,0,0.92);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid #111;
+      padding: 12px 32px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .topbar-brand {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 13px;
+      font-weight: 700;
+      letter-spacing: 4px;
+      text-transform: uppercase;
+      color: var(--green);
+    }
+
+    .topbar-badge {
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--muted);
+      border: 1px solid #222;
+      padding: 3px 10px;
+    }
+
+    /* ── Hero ── */
+    .hero {
+      position: relative;
+      overflow: hidden;
+      padding: 96px 24px 80px;
+      text-align: center;
+      background: #000;
+    }
+
+    .hero-glow {
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(ellipse 80% 60% at 50% -10%, rgba(137,255,0,0.12), transparent 60%),
+        radial-gradient(ellipse 40% 30% at 20% 80%, rgba(137,255,0,0.04), transparent 50%),
+        radial-gradient(ellipse 40% 30% at 80% 80%, rgba(137,255,0,0.04), transparent 50%);
+      pointer-events: none;
+    }
+
+    /* Diagonal slash accent */
+    .hero::after {
+      content: "";
+      position: absolute;
+      bottom: -2px;
+      left: 0;
+      right: 0;
+      height: 60px;
+      background: var(--surface);
+      clip-path: polygon(0 100%, 100% 0, 100% 100%);
+    }
+
+    .hero-eyebrow {
+      display: inline-block;
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 5px;
+      text-transform: uppercase;
+      color: var(--green);
+      margin-bottom: 24px;
+      padding: 4px 14px;
+      border: 1px solid rgba(137,255,0,0.3);
+      border-left: 3px solid var(--green);
+    }
+
+    .hero-claw {
+      display: block;
+      font-size: 48px;
+      margin-bottom: 8px;
+      filter: drop-shadow(0 0 16px rgba(137,255,0,0.4));
+    }
+
+    .hero h1 {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: clamp(3rem, 9vw, 7rem);
+      font-weight: 900;
+      letter-spacing: -1px;
+      line-height: 0.95;
+      text-transform: uppercase;
+      margin-bottom: 20px;
+    }
+
+    .hero h1 .line-green {
+      display: block;
+      color: var(--green);
+      text-shadow: 0 0 40px rgba(137,255,0,0.4);
+    }
+
+    .hero h1 .line-white { display: block; color: #fff; }
+
+    .hero-sub {
+      font-size: 1rem;
+      color: var(--muted);
+      max-width: 500px;
+      margin: 0 auto 48px;
+      letter-spacing: 0.02em;
+    }
+
+    .hero-dates {
+      position: relative;
+      z-index: 1;
+      display: inline-grid;
+      grid-template-columns: repeat(4, auto);
+      gap: 0;
+      border: 1px solid #1e1e1e;
+      overflow: hidden;
+    }
+
+    .date-item {
+      text-align: center;
+      padding: 20px 28px;
+      border-right: 1px solid #1e1e1e;
+      background: #080808;
+    }
+
+    .date-item:last-child { border-right: none; }
+
+    .date-label {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 9px;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 6px;
+    }
+
+    .date-value {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 1.2rem;
+      font-weight: 700;
+      letter-spacing: 1px;
+      color: var(--text);
+      text-transform: uppercase;
+    }
+
+    .date-value.accent { color: var(--green); }
+
+    /* ── Layout ── */
+    .container {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 72px 24px;
+    }
+
+    .section-header {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      margin-bottom: 32px;
+      padding-bottom: 16px;
+      border-bottom: 1px solid #111;
+    }
+
+    .section-header h2 {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 1.8rem;
+      font-weight: 900;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+    }
+
+    .section-bar {
+      width: 3px;
+      height: 28px;
+      background: var(--green);
+      flex-shrink: 0;
+      box-shadow: 0 0 8px rgba(137,255,0,0.5);
+    }
+
+    .section-tag {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--green);
+      background: rgba(137,255,0,0.06);
+      border: 1px solid rgba(137,255,0,0.2);
+      border-left: 2px solid var(--green);
+      padding: 3px 10px;
+      margin-left: auto;
+    }
+
+    /* ── Pass Cards ── */
+    .pass-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(290px, 1fr));
+      gap: 1px;
+      background: #111;
+      border: 1px solid #111;
+    }
+
+    .pass-card {
+      background: var(--card);
+      padding: 28px;
+      transition: background 0.2s;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .pass-card::before {
+      content: "";
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 2px;
+      background: transparent;
+      transition: background 0.2s;
+    }
+
+    .pass-card:hover { background: #0f0f0f; }
+    .pass-card:hover::before { background: var(--green); }
+
+    .pass-card.featured {
+      background: #080f00;
+    }
+
+    .pass-card.featured::before { background: var(--green); }
+
+    .pass-card.featured::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(ellipse 100% 60% at 50% 0%, rgba(137,255,0,0.06), transparent 70%);
+      pointer-events: none;
+    }
+
+    .pass-type {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 9px;
+      font-weight: 700;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      color: var(--green);
+      margin-bottom: 10px;
+    }
+
+    .pass-card h3 {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 1.2rem;
+      font-weight: 700;
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+      margin-bottom: 10px;
+      line-height: 1.2;
+    }
+
+    .pass-card p {
+      font-size: 0.85rem;
+      color: var(--muted);
+      margin-bottom: 18px;
+      line-height: 1.5;
+    }
+
+    .pass-perks {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 7px;
+    }
+
+    .pass-perks li {
+      font-size: 0.83rem;
+      color: #aaa;
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+    }
+
+    .pass-perks li::before {
+      content: "—";
+      color: var(--green);
+      font-weight: 700;
+      flex-shrink: 0;
+      margin-top: 1px;
+    }
+
+    .pass-badge {
+      display: inline-block;
+      margin-top: 18px;
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--green);
+      background: rgba(137,255,0,0.06);
+      border: 1px solid rgba(137,255,0,0.2);
+      padding: 4px 10px;
+    }
+
+    /* ── SIC Callout ── */
+    .sic-callout {
+      margin: 2px 0 0;
+      background: #080f00;
+      border: 1px solid rgba(137,255,0,0.2);
+      border-top: 2px solid var(--green);
+      padding: 32px 36px;
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 32px;
+      align-items: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .sic-callout::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(ellipse 50% 80% at 100% 50%, rgba(137,255,0,0.04), transparent 60%);
+      pointer-events: none;
+    }
+
+    .sic-callout h3 {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 1.3rem;
+      font-weight: 900;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      margin-bottom: 10px;
+      color: var(--green);
+    }
+
+    .sic-callout p {
+      font-size: 0.88rem;
+      color: var(--muted);
+      max-width: 560px;
+      line-height: 1.6;
+    }
+
+    .sic-callout p strong { color: var(--text); }
+
+    .sic-meta {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      gap: 4px;
+      flex-shrink: 0;
+    }
+
+    .sic-meta .label {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 9px;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+
+    .sic-meta .value {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 2.2rem;
+      font-weight: 900;
+      color: var(--green);
+      line-height: 1;
+      text-shadow: 0 0 20px rgba(137,255,0,0.3);
+    }
+
+    /* ── Sessions ── */
+    .sessions-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      gap: 1px;
+      background: #111;
+      border: 1px solid #111;
+    }
+
+    .session-card {
+      background: var(--card);
+      padding: 24px;
+      transition: background 0.2s;
+      position: relative;
+    }
+
+    .session-card::before {
+      content: "";
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 2px;
+      background: #1a1a1a;
+      transition: background 0.2s;
+    }
+
+    .session-card:hover { background: #0f0f0f; }
+    .session-card:hover::before { background: var(--sf-blue); }
+
+    .session-card.placeholder { opacity: 0.45; }
+    .session-card.placeholder::before { background: #1a1a1a; }
+
+    .add-session-card {
+      background: #050505;
+      padding: 24px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      color: var(--muted);
+      font-size: 0.85rem;
+      cursor: pointer;
+      border: 2px dashed #1a1a1a;
+      transition: border-color 0.2s, color 0.2s;
+      min-height: 140px;
+    }
+
+    .add-session-card:hover { border-color: rgba(137,255,0,0.3); color: var(--green); }
+    .add-session-card .plus {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 2.5rem;
+      font-weight: 900;
+      display: block;
+      margin-bottom: 6px;
+      opacity: 0.4;
+    }
+
+    .session-track {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 9px;
+      font-weight: 700;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      color: var(--sf-blue);
+      margin-bottom: 8px;
+    }
+
+    .session-card h4 {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 1.05rem;
+      font-weight: 700;
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+      margin-bottom: 8px;
+      line-height: 1.2;
+    }
+
+    .session-card p {
+      font-size: 0.82rem;
+      color: var(--muted);
+      margin-bottom: 14px;
+      line-height: 1.5;
+    }
+
+    .session-meta { display: flex; gap: 8px; flex-wrap: wrap; }
+
+    .session-chip {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      color: var(--muted);
+      background: #111;
+      border: 1px solid #1e1e1e;
+      padding: 2px 8px;
+    }
+
+    /* ── Opportunities Table ── */
+    .opp-strip {
+      background: var(--card);
+      border: 1px solid #111;
+      overflow: hidden;
+    }
+
+    .opp-row {
+      display: grid;
+      grid-template-columns: 2fr 1fr 1fr 1fr;
+      gap: 16px;
+      padding: 16px 24px;
+      border-bottom: 1px solid #111;
+      align-items: center;
+      transition: background 0.15s;
+    }
+
+    .opp-row:last-child { border-bottom: none; }
+    .opp-row:not(.header):hover { background: #0e0e0e; }
+
+    .opp-row.header {
+      background: #060606;
+      padding: 10px 24px;
+      border-bottom: 1px solid #1a1a1a;
+    }
+
+    .opp-row.header span {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 9px;
+      font-weight: 700;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+
+    .opp-name {
+      font-size: 0.88rem;
+      font-weight: 600;
+      color: var(--text);
+    }
+
+    .opp-name small {
+      display: block;
+      font-size: 0.75rem;
+      color: var(--muted);
+      font-weight: 400;
+      margin-top: 3px;
+      letter-spacing: 0.02em;
+    }
+
+    .opp-amount {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: var(--green);
+      letter-spacing: 0.5px;
+    }
+
+    .opp-stage {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 2px;
+      padding: 3px 8px;
+      text-transform: uppercase;
+      display: inline-block;
+    }
+
+    .stage-pipeline { background: rgba(77,182,255,0.1); color: #4db6ff; border: 1px solid rgba(77,182,255,0.25); }
+    .stage-negotiate { background: rgba(255,165,0,0.1); color: #ffa500; border: 1px solid rgba(255,165,0,0.25); }
+    .stage-qualify { background: rgba(128,128,128,0.1); color: #888; border: 1px solid #222; }
+
+    .opp-link {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--sf-blue);
+      text-decoration: none;
+      opacity: 0.7;
+      transition: opacity 0.15s;
+    }
+
+    .opp-link:hover { opacity: 1; text-decoration: underline; }
+
+    /* ── Total row ── */
+    .opp-total {
+      background: #080f00;
+      border-top: 1px solid rgba(137,255,0,0.15);
+    }
+
+    .opp-total .opp-name {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 0.75rem;
+      font-weight: 700;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+
+    .opp-total .opp-amount {
+      font-size: 1.3rem;
+      text-shadow: 0 0 12px rgba(137,255,0,0.3);
+    }
+
+    /* ── Divider ── */
+    .section-divider { border: none; border-top: 1px solid #0d0d0d; margin: 0; }
+
+    /* ── Footer ── */
+    .page-footer {
+      background: #050505;
+      border-top: 1px solid #111;
+      padding: 32px 24px;
+      text-align: center;
+      color: var(--muted);
+      font-size: 0.8rem;
+      letter-spacing: 0.03em;
+    }
+
+    .page-footer a { color: var(--green); text-decoration: none; opacity: 0.8; }
+    .page-footer a:hover { opacity: 1; }
+
+    .footer-claw {
+      display: block;
+      font-size: 28px;
+      margin-bottom: 12px;
+      opacity: 0.3;
+    }
+
+    /* ── Responsive ── */
+    @media (max-width: 640px) {
+      .hero-dates { grid-template-columns: 1fr 1fr; }
+      .sic-callout { grid-template-columns: 1fr; }
+      .sic-meta { align-items: flex-start; }
+      .opp-row { grid-template-columns: 1fr 1fr; row-gap: 8px; }
+      .opp-row.header span:nth-child(3),
+      .opp-row.header span:nth-child(4) { display: none; }
+      .opp-row .opp-stage, .opp-row .opp-link { display: none; }
+      .topbar-badge { display: none; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ════════════════════════════════
+     PASSWORD GATE
+════════════════════════════════ -->
+<div id="gate">
+  <div class="gate-bg"></div>
+  <div class="gate-claw">𝙈</div>
+  <div class="gate-title">Confidential · Salesforce Internal</div>
+  <div class="gate-box">
+    <input
+      id="gate-input"
+      class="gate-input"
+      type="password"
+      placeholder="ENTER PASSWORD"
+      autocomplete="off"
+    />
+    <button class="gate-btn" onclick="checkPassword()">UNLOCK</button>
+    <div class="gate-error" id="gate-error">Incorrect password</div>
+  </div>
+</div>
+
+<script>
+  (function() {
+    if (sessionStorage.getItem('monster_df_auth') === '1') {
+      document.getElementById('gate').classList.add('hidden');
+    }
+    document.getElementById('gate-input').addEventListener('keydown', function(e) {
+      if (e.key === 'Enter') checkPassword();
+    });
+  })();
+
+  function checkPassword() {
+    var input = document.getElementById('gate-input').value;
+    var err = document.getElementById('gate-error');
+    if (input.toLowerCase() === 'salesforce') {
+      sessionStorage.setItem('monster_df_auth', '1');
+      var gate = document.getElementById('gate');
+      gate.style.transition = 'opacity 0.4s';
+      gate.style.opacity = '0';
+      setTimeout(function() { gate.classList.add('hidden'); }, 400);
+    } else {
+      err.classList.add('visible');
+      document.getElementById('gate-input').value = '';
+      document.getElementById('gate-input').focus();
+      setTimeout(function() { err.classList.remove('visible'); }, 2000);
+    }
+  }
+</script>
+
+<!-- ── Top Bar ── -->
+<nav class="topbar">
+  <span class="topbar-brand">𝙈 Monster Energy × Dreamforce 2026</span>
+  <span class="topbar-badge">Internal · Confidential</span>
+</nav>
+
+<!-- ── Hero ── -->
+<section class="hero">
+  <div class="hero-glow"></div>
+  <span class="hero-claw">𝙈</span>
+  <span class="hero-eyebrow">Account Strategy Brief</span>
+  <h1>
+    <span class="line-white">Monster Energy</span>
+    <span class="line-green">× Dreamforce 2026</span>
+  </h1>
+  <p class="hero-sub">Executive engagement plan, pass opportunities, and sessions of interest for the Monster Energy account team.</p>
+  <div class="hero-dates">
+    <div class="date-item">
+      <div class="date-label">Event</div>
+      <div class="date-value">Dreamforce 2026</div>
+    </div>
+    <div class="date-item">
+      <div class="date-label">Dates</div>
+      <div class="date-value">Sep 15 – 18</div>
+    </div>
+    <div class="date-item">
+      <div class="date-label">Location</div>
+      <div class="date-value">San Francisco</div>
+    </div>
+    <div class="date-item">
+      <div class="date-label">ACV at Stake</div>
+      <div class="date-value accent">$1.31M+</div>
+    </div>
+  </div>
+</section>
+
+<!-- ── Exec Pass Opportunities ── -->
+<div style="background: var(--surface);">
+<div class="container">
+  <div class="section-header">
+    <div class="section-bar"></div>
+    <h2>Executive Pass Opportunities</h2>
+    <span class="section-tag">Action Required</span>
+  </div>
+
+  <div class="pass-grid">
+    <div class="pass-card featured">
+      <div class="pass-type">★ Highest Priority</div>
+      <h3>Strategic Innovation Center (SIC) at Dreamforce</h3>
+      <p>Private executive briefing in Salesforce's dedicated SIC facility. Ideal for aligning Monster's CxO team on AI transformation strategy and the Agentforce roadmap.</p>
+      <ul class="pass-perks">
+        <li>Dedicated private meeting space on-site</li>
+        <li>Custom agenda with product specialists</li>
+        <li>CxO-level facilitation (CRO, CIO, COO alignment)</li>
+        <li>Tailored to Consumer Goods Cloud + Agentforce</li>
+        <li>Supports Q4 pipeline close motion</li>
+      </ul>
+      <span class="pass-badge">Estimated ACV Impact: $1.5–2M</span>
+    </div>
+
+    <div class="pass-card">
+      <div class="pass-type">Executive Track</div>
+      <h3>Trailblazer Summit Pass</h3>
+      <p>Full conference access with priority seating at keynotes, executive networking events, and the Customer Success Summit.</p>
+      <ul class="pass-perks">
+        <li>All 4 days of conference access</li>
+        <li>CEO/Executive keynote seating priority</li>
+        <li>Executive networking dinners</li>
+        <li>Genie + Agentforce hands-on labs</li>
+      </ul>
+      <span class="pass-badge">Recommend: IT + Sales Leadership</span>
+    </div>
+
+    <div class="pass-card">
+      <div class="pass-type">Partner Track</div>
+      <h3>Accenture Partner Co-Engagement</h3>
+      <p>Coordinate a joint Accenture + Salesforce executive session to align on Phase 3 SOW and Agentforce consumption milestones during the event.</p>
+      <ul class="pass-perks">
+        <li>Joint session with Accenture account team</li>
+        <li>Phase 3 SOW acceleration meeting</li>
+        <li>Agentforce ROI benchmarking discussion</li>
+        <li>Catalyst Funding narrative alignment</li>
+      </ul>
+      <span class="pass-badge">Coordinate with: Accenture Team</span>
+    </div>
+
+    <div class="pass-card">
+      <div class="pass-type">Demo Access</div>
+      <h3>Agentforce World Tour Experience</h3>
+      <p>Guided hands-on experience in the Agentforce demo zone — critical given Monster's &lt;5% current utilization and CGC-specific use case gaps.</p>
+      <ul class="pass-perks">
+        <li>Consumer Goods Cloud AI demos</li>
+        <li>Data Cloud live integration walk-through</li>
+        <li>Guided by a CG Cloud specialist SE</li>
+        <li>Addresses CEO ROI scrutiny with live proof</li>
+      </ul>
+      <span class="pass-badge">Target: IT Admin + Sales Ops</span>
+    </div>
+  </div>
+
+  <div class="sic-callout">
+    <div>
+      <h3>SIC Request Status</h3>
+      <p>A Dreamforce SIC has already been submitted for a comparable account (Clear Channel Outdoor) targeting Sept 16. Use this as a template to fast-track Monster's SIC request through the AMER SIC Events team. Engage <strong>Nick Haglan</strong> and <strong>Azeo Fables</strong> to align on timing.</p>
+    </div>
+    <div class="sic-meta">
+      <span class="label">SIC ACV Target</span>
+      <span class="value">$1.5–2M</span>
+      <span class="label">Q4 Close</span>
+    </div>
+  </div>
+</div>
+</div>
+
+<hr class="section-divider" />
+
+<!-- ── Sessions of Interest ── -->
+<div style="background: #000;">
+<div class="container">
+  <div class="section-header">
+    <div class="section-bar"></div>
+    <h2>Sessions of Interest</h2>
+    <span class="section-tag">Placeholder — Add Sessions</span>
+  </div>
+
+  <div class="sessions-grid">
+    <div class="session-card">
+      <div class="session-track">Agentforce</div>
+      <h4>Agentforce for Consumer Goods: From Pilot to Production</h4>
+      <p>Real-world CGC Agentforce deployments — exactly the benchmarks Monster's CEO is demanding. Strong ROI narrative for Phase 3 de-scoping risk.</p>
+      <div class="session-meta">
+        <span class="session-chip">To Be Confirmed</span>
+        <span class="session-chip">CGC Track</span>
+        <span class="session-chip">Recommended</span>
+      </div>
+    </div>
+
+    <div class="session-card">
+      <div class="session-track">Data Cloud</div>
+      <h4>Unifying B2B + B2C Data on a Single Platform</h4>
+      <p>Directly relevant to the Data Cloud for B2B/TPM opportunity ($250K) and Monster's need to break down internal data silos.</p>
+      <div class="session-meta">
+        <span class="session-chip">To Be Confirmed</span>
+        <span class="session-chip">Data Track</span>
+        <span class="session-chip">Recommended</span>
+      </div>
+    </div>
+
+    <div class="session-card">
+      <div class="session-track">MuleSoft</div>
+      <h4>Integration-Led Transformation with MuleSoft + Salesforce</h4>
+      <p>Supports the existing $450K MuleSoft AOV and reinforces Monster as a strategic platform customer across the Salesforce portfolio.</p>
+      <div class="session-meta">
+        <span class="session-chip">To Be Confirmed</span>
+        <span class="session-chip">Integration Track</span>
+      </div>
+    </div>
+
+    <div class="session-card placeholder">
+      <div class="session-track">TBD</div>
+      <h4>Session Placeholder</h4>
+      <p>Add a relevant session here — e.g., Loyalty Cloud, Marketing Cloud, or AI-driven Supply Chain for CG.</p>
+      <div class="session-meta">
+        <span class="session-chip">Placeholder</span>
+      </div>
+    </div>
+
+    <div class="session-card placeholder">
+      <div class="session-track">TBD</div>
+      <h4>Session Placeholder</h4>
+      <p>Add a relevant session here — e.g., Slack AI for Enterprise Sales Teams or Customer Success keynote.</p>
+      <div class="session-meta">
+        <span class="session-chip">Placeholder</span>
+      </div>
+    </div>
+
+    <div class="add-session-card">
+      <span class="plus">+</span>
+      Add Session of Interest
+      <small style="font-size:0.75rem; margin-top: 4px; display:block;">Paste session name, track, and relevance note</small>
+    </div>
+  </div>
+</div>
+</div>
+
+<hr class="section-divider" />
+
+<!-- ── Open Opportunities ── -->
+<div style="background: var(--surface);">
+<div class="container">
+  <div class="section-header">
+    <div class="section-bar"></div>
+    <h2>Active Opportunities</h2>
+    <span class="section-tag">H2 FY26</span>
+  </div>
+
+  <div class="opp-strip">
+    <div class="opp-row header">
+      <span>Opportunity</span>
+      <span>Amount</span>
+      <span>Stage</span>
+      <span>Link</span>
+    </div>
+    <div class="opp-row">
+      <div class="opp-name">Monster Energy US LLC — AF for CG Add-On<small>Agentforce · Consumer Goods Cloud</small></div>
+      <div class="opp-amount">$700K</div>
+      <div><span class="opp-stage stage-negotiate">Negotiate</span></div>
+      <div><a class="opp-link" href="https://org62.lightning.force.com/lightning/r/Opportunity/006ed00000d9c2oAAA/view" target="_blank">Open in SF ↗</a></div>
+    </div>
+    <div class="opp-row">
+      <div class="opp-name">Monster Energy — Data Cloud for B2B / TPM<small>Data Cloud · B2B</small></div>
+      <div class="opp-amount">$250K</div>
+      <div><span class="opp-stage stage-pipeline">Pipeline</span></div>
+      <div><a class="opp-link" href="https://org62.lightning.force.com/lightning/r/006ed00000JHyODAA1/view" target="_blank">Open in SF ↗</a></div>
+    </div>
+    <div class="opp-row">
+      <div class="opp-name">Monster Energy — Data Cloud (Loyalty)<small>Data Cloud · Loyalty</small></div>
+      <div class="opp-amount">$210K</div>
+      <div><span class="opp-stage stage-pipeline">Pipeline</span></div>
+      <div><a class="opp-link" href="https://org62.lightning.force.com/lightning/r/006ed00000DQLe1AAH/view" target="_blank">Open in SF ↗</a></div>
+    </div>
+    <div class="opp-row">
+      <div class="opp-name">Monster Energy — Agentforce Flex Credits (REX Use Cases)<small>Agentforce · Flex Credits</small></div>
+      <div class="opp-amount">$150K</div>
+      <div><span class="opp-stage stage-qualify">Qualify</span></div>
+      <div><a class="opp-link" href="https://org62.lightning.force.com/lightning/r/006ed00000BaZ5lAAF/view" target="_blank">Open in SF ↗</a></div>
+    </div>
+    <div class="opp-row opp-total">
+      <div class="opp-name">Total Pipeline</div>
+      <div class="opp-amount">$1.31M</div>
+      <div></div>
+      <div></div>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- ── Footer ── -->
+<footer class="page-footer">
+  <span class="footer-claw">𝙈</span>
+  Monster Energy × Dreamforce 2026 · Account Owner: Alex McArthur · Salesforce Internal<br>
+  <a href="https://org62.lightning.force.com/lightning/r/Account/0013y00001c74g9AAA/view" target="_blank">View Monster Energy Account in Salesforce ↗</a>
+</footer>
+
+</body>
+</html>
