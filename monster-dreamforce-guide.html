@@ -13,9 +13,9 @@
       --green-glow: rgba(137, 255, 0, 0.18);
       --green-glow-strong: rgba(137, 255, 0, 0.35);
       --black: #000000;
-      --surface: #080808;
-      --card: #0c0c0c;
-      --card-border: #1c1c1c;
+      --surface: #080e04;
+      --card: #0b1506;
+      --card-border: rgba(137, 255, 0, 0.18);
       --text: #e8e8e8;
       --muted: #666;
       --sf-blue: #4db6ff;
@@ -160,8 +160,8 @@
       display: grid;
       grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
       gap: 1px;
-      background: #111;
-      border: 1px solid #111;
+      background: rgba(137, 255, 0, 0.28);
+      border: 1px solid rgba(137, 255, 0, 0.28);
     }
     .kbyg-card {
       background: var(--card);
@@ -177,7 +177,7 @@
       background: transparent;
       transition: background 0.2s;
     }
-    .kbyg-card:hover { background: #0f0f0f; }
+    .kbyg-card:hover { background: #0f1d08; }
     .kbyg-card:hover::before { background: var(--green); }
     .kbyg-icon { font-size: 1.5rem; margin-bottom: 12px; display: block; }
     .kbyg-card h3 { font-family: 'Barlow Condensed', sans-serif; font-size: 1rem; font-weight: 900; letter-spacing: 1px; text-transform: uppercase; margin-bottom: 10px; color: #fff; }
@@ -202,8 +202,8 @@
       display: grid;
       grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
       gap: 1px;
-      background: #111;
-      border: 1px solid #111;
+      background: rgba(137, 255, 0, 0.28);
+      border: 1px solid rgba(137, 255, 0, 0.28);
     }
     .person-card {
       background: var(--card);
@@ -219,7 +219,7 @@
       background: transparent;
       transition: background 0.2s;
     }
-    .person-card:hover { background: #0f0f0f; }
+    .person-card:hover { background: #0f1d08; }
     .person-card.host::before { background: var(--green); }
     .person-card.attendee::before { background: var(--sf-blue); }
     .person-avatar {
@@ -287,13 +287,13 @@
       display: flex;
       flex-direction: column;
       gap: 1px;
-      background: #111;
-      border: 1px solid #111;
+      background: rgba(137, 255, 0, 0.28);
+      border: 1px solid rgba(137, 255, 0, 0.28);
     }
     .cal-day-header {
-      background: #060606;
+      background: #0d1f06;
       padding: 10px 24px;
-      border-bottom: 1px solid #111;
+      border-bottom: 1px solid rgba(137, 255, 0, 0.3);
       font-family: 'Barlow Condensed', sans-serif;
       font-size: 11px;
       font-weight: 700;
@@ -313,10 +313,10 @@
       gap: 20px;
       align-items: start;
       transition: background 0.15s;
-      border-bottom: 1px solid #0d0d0d;
+      border-bottom: 1px solid rgba(137, 255, 0, 0.12);
     }
     .cal-event-row:last-of-type { border-bottom: none; }
-    .cal-event-row:hover { background: #0f0f0f; }
+    .cal-event-row:hover { background: #0f1d08; }
     .cal-time {
       font-family: 'Barlow Condensed', sans-serif;
       font-size: 0.95rem;
@@ -364,8 +364,8 @@
       display: grid;
       grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
       gap: 1px;
-      background: #111;
-      border: 1px solid #111;
+      background: rgba(137, 255, 0, 0.28);
+      border: 1px solid rgba(137, 255, 0, 0.28);
     }
     .topic-card {
       background: var(--card);
@@ -380,7 +380,7 @@
       height: 2px;
       background: var(--sf-blue);
     }
-    .topic-card:hover { background: #0f0f0f; }
+    .topic-card:hover { background: #0f1d08; }
     .topic-category {
       font-family: 'Barlow Condensed', sans-serif;
       font-size: 9px;
@@ -410,8 +410,8 @@
       display: grid;
       grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
       gap: 1px;
-      background: #111;
-      border: 1px solid #111;
+      background: rgba(137, 255, 0, 0.28);
+      border: 1px solid rgba(137, 255, 0, 0.28);
     }
     .session-card {
       background: var(--card);
@@ -427,7 +427,7 @@
       background: #1a1a1a;
       transition: background 0.2s;
     }
-    .session-card:hover { background: #0f0f0f; }
+    .session-card:hover { background: #0f1d08; }
     .session-card:hover::before { background: var(--sf-blue); }
     .session-card.empty {
       display: flex;
@@ -661,7 +661,7 @@
 <!-- ══════════════════════════════════════
      ATTENDEES & SALESFORCE HOSTS
 ══════════════════════════════════════ -->
-<div id="people" style="background: #000;">
+<div id="people" style="background: #040a01;">
 <div class="container">
   <div class="section-header">
     <div class="section-bar"></div>
@@ -686,6 +686,13 @@
       <div class="person-avatar">BH</div>
       <div class="person-role-tag attendee">Monster Energy · Attendee</div>
       <h3>Brent Hall</h3>
+      <div class="person-title">Monster Energy</div>
+    </div>
+
+    <div class="person-card attendee">
+      <div class="person-avatar">JG</div>
+      <div class="person-role-tag attendee">Monster Energy · Attendee</div>
+      <h3>Jon Gestine</h3>
       <div class="person-title">Monster Energy</div>
     </div>
 
@@ -912,7 +919,7 @@
 <!-- ══════════════════════════════════════
      TOPICS OF INTEREST
 ══════════════════════════════════════ -->
-<div id="topics" style="background: #000;">
+<div id="topics" style="background: #040a01;">
 <div class="container">
   <div class="section-header">
     <div class="section-bar"></div>
